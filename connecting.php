@@ -29,14 +29,65 @@ $auth_result = $unifi_connection->authorize_guest($mac, $duration, $up = null, $
 
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>WiFi Portal</title>
-        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		<meta http-equiv="refresh" content="5;url=https://www.google.com/" />
-    </head>
-    <body>
-            <p>You're online! <br>
-            Thanks for visiting us!</p>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <title>Acceso WiFi | Cremona Inoxidable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Estilos embebidos -->
+    <style>
+        /* Reset básico */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        p.welcome-text {
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        p.welcome2-text {
+            margin-bottom: 0px;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .logo {
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="Creminox.png" alt="Creminox Logo" class="logo">
+
+        <p class="welcome-text">¡Su conexión fue establecida!</p>
+        <p class="welcome2-text">Será redirigido a "google.com" automáticamente. <br>Si no es así, puede retirarse de esta página sin problemas.</p>
+    </div>
+</body>
 </html>
