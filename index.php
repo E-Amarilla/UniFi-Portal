@@ -9,7 +9,7 @@ $_SESSION["ap"] = $_GET["ap"];
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>WiFi Portal</title>
+    <title>Acceso WiFi | Cremona Inoxidable</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Estilos embebidos -->
@@ -73,8 +73,8 @@ $_SESSION["ap"] = $_GET["ap"];
         }
 
         .form-group input:focus {
-            border-color: #0078d4;
-            box-shadow: 0 0 5px rgba(0, 120, 212, 0.3);
+            border-color: #223f7f;
+            box-shadow: 0 0 5px rgba(34, 63, 127, 0.3);
             outline: none;
         }
 
@@ -83,7 +83,7 @@ $_SESSION["ap"] = $_GET["ap"];
             padding: 12px;
             border: none;
             border-radius: 10px;
-            background-color: #0078d4;
+            background-color: #ed292e;
             color: #fff;
             font-size: 16px;
             cursor: pointer;
@@ -91,13 +91,31 @@ $_SESSION["ap"] = $_GET["ap"];
         }
 
         input[type="submit"]:hover {
-            background-color: #005ea3;
+            background-color: #a31b1e;
         }
 
         p.welcome-text {
-            margin-bottom: 30px;
+            margin-bottom: 5px;
             color: #333;
             font-size: 18px;
+            font-weight: bold;
+        }
+        
+        p.welcome2-text {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 15px;
+        }
+
+        p.exit-text {
+            margin-bottom: 10px;
+            color: #ccc;
+            font-size: 9px;
+        }
+
+        .logo {
+            width: 200px;
+            margin-bottom: 10px;
         }
 
     </style>
@@ -105,20 +123,22 @@ $_SESSION["ap"] = $_GET["ap"];
 <body>
     <div class="card">
         <!-- Logo SVG centrado -->
-        <?php include 'Creminox.svg'; ?>
+        <img src="Creminox.png" alt="Creminox Logo" class="logo">
 
-        <p class="welcome-text">Welcome!<br>Please login to our Wifi service</p>
+        <p class="welcome-text">¡Bienvenidos!</p>
+        <p class="welcome2-text">Por favor, complete los campos para obtener conexión a internet.</p>
 
         <form method="post" action="connecting.php">
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Insert Name">
+                <label for="name">Nombre</label>
+                <input type="text" id="name" name="name" placeholder="Ingrese su nombre">
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Insert Email">
+                <input type="email" id="email" name="email" placeholder="Ingrese su email">
             </div>
-            <input type="submit" value="Sign up">
+            <p class="exit-text">Su información será almacenada con fines estadísticos y de mejora del servicio.</p>
+            <input type="submit" value="Ingresar">
         </form>
     </div>
 </body>
