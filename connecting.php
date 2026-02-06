@@ -7,15 +7,42 @@ $ap = $_SESSION["ap"];
 $name = $_POST['name'];
 $email = $_POST['email'];
 
+
+// MySQL connection
+$db_host = 'localhost';
+$db_user = 'unifi'; // Cambia por tu usuario
+$db_pass = 'unifi123';    // Cambia por tu contraseña
+$db_name = 'usuarios-unifi';
+$table_name = 'usuarios';
+
+$conn = new mysqli($db_host, $db_user, $db_pass);
+if ($conn->connect_error) {
+    die('Error de conexión MySQL: ' . $conn->connect_error);
+}
+
+// Crear esquema si no existe
+$conn->query("CREATE DATABASE IF NOT EXISTS `$db_name`");
+$conn->select_db($db_name);
+
+// Crear tabla si no existe
+$create_table_sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
+    nombre VARCHAR(100),
+    red VARCHAR(100),
+    mac VARCHAR(20) PRIMARY KEY,
+    fecha DATETIME,
+    correo VARCHAR(100)
+);";
+$conn->query($create_table_sql);
+
 require __DIR__ . '/vendor/autoload.php';
 
 $duration = 30; //Duration of authorization in minutes
-$site_id = 'default'; //Site ID found in URL (https://1.1.1.1:8443/manage/site/<site_ID>/devices/1/50)
+$site_id = 'default';
 
-$controlleruser     = 'admin'; // the user name for access to the UniFi Controller
-$controllerpassword = 'miloj@324156'; // the password for access to the UniFi Controller
-$controllerurl      = 'https://192.168.20.16:8443'; // full url to the UniFi Controller, eg. 'https://22.22.11.11:8443'
-$controllerversion  = '10.0.162'; // the version of the Controller software, eg. '4.6.6' (must be at least 4.0.0)
+$controlleruser     = 'admin';
+$controllerpassword = 'miloj@324156';
+$controllerurl      = 'https://192.168.20.16:8443';
+$controllerversion  = '10.0.162'; // the version of the Controller software
 $debug = false;
 
 $unifi_connection = new UniFi_API\Client($controlleruser, $controllerpassword, $controllerurl, $site_id, $controllerversion);
@@ -24,7 +51,19 @@ $loginresults     = $unifi_connection->login();
 
 $auth_result = $unifi_connection->authorize_guest($mac, $duration, $up = null, $down = null, $MBytes = null, $ap);
 
-//User will be authorized at this point; their name and email address can be saved to some database now
+// Guardar datos del usuario en la base de datos
+$nombre = $name;
+$red = $ap;
+$mac_address = $mac;
+$fecha = date('Y-m-d H:i:s');
+$correo = $email;
+
+$stmt = $conn->prepare("INSERT IGNORE INTO `$table_name` (nombre, red, mac, fecha, correo) VALUES (?, ?, ?, ?, ?)");
+if ($stmt) {
+    $stmt->bind_param('sssss', $nombre, $red, $mac_address, $fecha, $correo);
+    $stmt->execute();
+    $stmt->close();
+}
 ?>
 
 <!doctype html>
@@ -33,10 +72,7 @@ $auth_result = $unifi_connection->authorize_guest($mac, $duration, $up = null, $
     <meta charset="utf-8">
     <title>Acceso WiFi | Cremona Inoxidable</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Estilos embebidos -->
     <style>
-        /* Reset básico */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -62,17 +98,17 @@ $auth_result = $unifi_connection->authorize_guest($mac, $duration, $up = null, $
             text-align: center;
         }
 
-        p.welcome-text {
+        p.back-text {
             margin-bottom: 5px;
             color: #333;
             font-size: 18px;
             font-weight: bold;
         }
         
-        p.welcome2-text {
+        p.back2-text {
             margin-bottom: 0px;
             color: #333;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .logo {
@@ -86,8 +122,8 @@ $auth_result = $unifi_connection->authorize_guest($mac, $duration, $up = null, $
     <div class="card">
         <img src="Creminox.png" alt="Creminox Logo" class="logo">
 
-        <p class="welcome-text">¡Su conexión fue establecida!</p>
-        <p class="welcome2-text">Será redirigido a "google.com" automáticamente. <br>Si no es así, puede retirarse de esta página sin problemas.</p>
+        <p class="back-text">¡Su conexión fue establecida!</p>
+        <p class="back2-text">Ya puede navegar por la web. <br>Si no es redirigido automaticamente, puede retirarse de esta página sin problemas.</p>
     </div>
 </body>
 </html>

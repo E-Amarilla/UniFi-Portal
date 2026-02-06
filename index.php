@@ -4,6 +4,31 @@ session_start();
 //Get the MAC addresses of AP and user
 $_SESSION["id"] = $_GET["id"];
 $_SESSION["ap"] = $_GET["ap"];
+// MySQL connection
+$db_host = 'localhost';
+$db_user = 'unifi'; // Cambia por tu usuario
+$db_pass = 'unifi123';
+$db_name = 'usuarios-unifi';
+$table_name = 'usuarios';
+$mac = $_SESSION["id"];
+
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+if ($conn->connect_error) {
+    die('Error de conexión MySQL: ' . $conn->connect_error);
+}
+
+$stmt = $conn->prepare("SELECT mac FROM `$table_name` WHERE mac = ?");
+$stmt->bind_param('s', $mac);
+$stmt->execute();
+$stmt->store_result();
+$mac_registered = $stmt->num_rows > 0;
+$stmt->close();
+
+if ($mac_registered) {
+    // Usuario ya registrado, mostrar mensaje de acceso
+    echo '<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Acceso WiFi | Cremona Inoxidable</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>*{box-sizing:border-box;margin:0;padding:0;font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;}body{background:#f0f2f5;display:flex;justify-content:center;align-items:center;height:100vh;}.card{background:#fff;padding:40px 30px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.1);width:100%;max-width:400px;text-align:center;}.logo{width:200px;margin-bottom:10px;}p.back-text{margin-bottom:5px;color:#333;font-size:18px;font-weight:bold;}p.back2-text{margin-bottom:0px;color:#333;font-size:14px;}</style></head><body><div class="card"><img src="Creminox.png" alt="Creminox Logo" class="logo"><p class="back-text">¡Su conexión fue establecida!</p><p class="back2-text">Ya puede navegar por la web. <br>Si no es redirigido automaticamente, puede retirarse de esta página sin problemas.</p></div></body></html>';
+    exit;
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -12,9 +37,7 @@ $_SESSION["ap"] = $_GET["ap"];
     <title>Acceso WiFi | Cremona Inoxidable</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Estilos embebidos -->
     <style>
-        /* Reset básico */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -134,8 +157,8 @@ $_SESSION["ap"] = $_GET["ap"];
                 <input type="text" id="name" name="name" placeholder="Ingrese su nombre">
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Ingrese su email">
+                <label for="email">Correo electronico</label>
+                <input type="email" id="email" name="email" placeholder="Ingrese su correo electronico">
             </div>
             <p class="exit-text">Su información será almacenada con fines estadísticos y de mejora del servicio.</p>
             <input type="submit" value="Ingresar">
