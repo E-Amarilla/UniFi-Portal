@@ -60,8 +60,21 @@ if ($export_excel) {
     <title>Reporte de conexiones WiFi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { background: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 30px; }
+        body {
+            background: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
         h1 { text-align: center; color: #223f7f; margin-bottom: 30px; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         th, td { padding: 12px 10px; border-bottom: 1px solid #eee; text-align: left; }
