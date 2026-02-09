@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 
 $_SESSION["id"] = $_GET["id"];
@@ -44,7 +40,7 @@ if ($mac_registered) {
     // Usuario ya registrado: desconectar sesión activa, re-autorizar e insertar nuevo registro
     require __DIR__ . '/vendor/autoload.php';
 
-    $duration = 30;
+    $duration = 0;
     $site_id = 'default';
 
     $controlleruser     = 'admin';
@@ -83,7 +79,7 @@ if ($mac_registered) {
     // Dispositivo nuevo: desconectar cualquier sesión activa antes de mostrar el portal
     require __DIR__ . '/vendor/autoload.php';
 
-    $duration = 30;
+    $duration = 0;
     $site_id = 'default';
 
     $controlleruser     = 'admin';

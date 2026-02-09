@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 
 $mac = $_SESSION["id"];
@@ -46,7 +42,7 @@ if ($col_check && $col_check->num_rows == 0) {
 
 require __DIR__ . '/vendor/autoload.php';
 
-$duration = 30;
+$duration = 0;
 $site_id = 'default';
 
 $controlleruser     = 'admin';
