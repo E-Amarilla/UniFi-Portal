@@ -16,6 +16,14 @@ $fecha_inicio = isset($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : '';
 $fecha_fin = isset($_GET['fecha_fin']) ? $_GET['fecha_fin'] : '';
 $export_excel = isset($_GET['excel']);
 
+// Si hay filtro, forzar hora de inicio a 00:00:00 y fin a 23:59:59
+if ($fecha_inicio && strlen($fecha_inicio) == 10) {
+    $fecha_inicio .= ' 00:00:00';
+}
+if ($fecha_fin && strlen($fecha_fin) == 10) {
+    $fecha_fin .= ' 23:59:59';
+}
+
 $where = '';
 $params = [];
 if ($fecha_inicio && $fecha_fin) {
