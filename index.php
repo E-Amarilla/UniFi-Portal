@@ -16,11 +16,9 @@ $mac_registered = false;
 $nombre = '';
 $correo = '';
 
-// Intentar conectar a la base de datos
 $conn = @new mysqli($db_host, $db_user, $db_pass, $db_name);
 
 if (!$conn->connect_error) {
-    // Verificar si la MAC está registrada, obtener el último registro
     $stmt = $conn->prepare("SELECT nombre, correo FROM `$table_name` WHERE mac = ? ORDER BY fecha DESC LIMIT 1");
     if ($stmt) {
         $stmt->bind_param('s', $mac);
@@ -37,7 +35,6 @@ if (!$conn->connect_error) {
 }
 
 if ($mac_registered) {
-    // Usuario ya registrado: desconectar sesión activa, re-autorizar e insertar nuevo registro
     require __DIR__ . '/vendor/autoload.php';
 
     $duration = 0;
@@ -53,13 +50,10 @@ if ($mac_registered) {
     $unifi_connection->set_debug($debug);
     $unifi_connection->login();
 
-    // Desconectar cualquier sesión activa existente
     $unifi_connection->unauthorize_guest($mac);
 
-    // Autorizar nuevamente
     $unifi_connection->authorize_guest($mac, $duration, null, null, null, $ap);
 
-    // Insertar nuevo registro de conexión con los datos existentes y fecha actualizada
     $red = 'WiFi Invitados';
     $fecha = date('Y-m-d H:i:s');
 
@@ -72,11 +66,9 @@ if ($mac_registered) {
 
     $conn->close();
 
-    // Mostrar mensaje de acceso
     echo '<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Acceso WiFi | Cremona Inoxidable</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>*{box-sizing:border-box;margin:0;padding:0;font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;}body{background:#f0f2f5;display:flex;justify-content:center;align-items:center;height:100vh;}.card{background:#fff;padding:40px 30px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.1);width:100%;max-width:400px;text-align:center;}.logo{width:200px;margin-bottom:10px;}p.back-text{margin-bottom:5px;color:#333;font-size:18px;font-weight:bold;}p.back2-text{margin-bottom:0px;color:#333;font-size:14px;}</style></head><body><div class="card"><img src="Creminox.png" alt="Creminox Logo" class="logo"><p class="back-text">¡Su conexión fue establecida!</p><p class="back2-text">Ya puede navegar por la web. <br>Si no es redirigido automaticamente, puede retirarse de esta página sin problemas.</p></div></body></html>';
     exit;
 } else {
-    // Dispositivo nuevo: desconectar cualquier sesión activa antes de mostrar el portal
     require __DIR__ . '/vendor/autoload.php';
 
     $duration = 0;
@@ -92,7 +84,6 @@ if ($mac_registered) {
     $unifi_connection->set_debug($debug);
     $unifi_connection->login();
 
-    // Desconectar cualquier sesión activa existente para este dispositivo
     $unifi_connection->unauthorize_guest($mac);
 
     if ($conn && !$conn->connect_error) {

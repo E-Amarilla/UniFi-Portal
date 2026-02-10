@@ -20,7 +20,6 @@ if ($conn->connect_error) {
 $conn->query("CREATE DATABASE IF NOT EXISTS `$db_name`");
 $conn->select_db($db_name);
 
-// Crear tabla con id autoincremental para permitir múltiples registros por MAC (historial)
 $create_table_sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100),
@@ -32,7 +31,6 @@ $create_table_sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
 );";
 $conn->query($create_table_sql);
 
-// Migrar esquema viejo si la tabla ya existía con mac como PRIMARY KEY
 $col_check = $conn->query("SHOW COLUMNS FROM `$table_name` LIKE 'id'");
 if ($col_check && $col_check->num_rows == 0) {
     $conn->query("ALTER TABLE `$table_name` DROP PRIMARY KEY");
@@ -55,13 +53,10 @@ $unifi_connection = new UniFi_API\Client($controlleruser, $controllerpassword, $
 $unifi_connection->set_debug($debug);
 $unifi_connection->login();
 
-// Desconectar cualquier sesión activa existente para esta MAC
 $unifi_connection->unauthorize_guest($mac);
 
-// Autorizar al invitado
 $unifi_connection->authorize_guest($mac, $duration, null, null, null, $ap);
 
-// Guardar registro de conexión
 $nombre = $name;
 $red = 'WiFi Invitados';
 $mac_address = $mac;
