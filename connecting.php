@@ -53,7 +53,7 @@ $unifi_connection = new UniFi_API\Client($controlleruser, $controllerpassword, $
 $unifi_connection->set_debug($debug);
 $unifi_connection->login();
 
-$unifi_connection->unauthorize_guest($mac);
+// $unifi_connection->unauthorize_guest($mac); // Removed to avoid disconnect/reconnect
 
 $unifi_connection->authorize_guest($mac, $duration, null, null, null, $ap);
 
