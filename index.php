@@ -56,11 +56,12 @@ if ($mac_registered) {
     $red = 'WiFi Invitados';
     $fecha = date('Y-m-d H:i:s');
 
-    $stmt_insert = $conn->prepare("INSERT INTO `$table_name` (nombre, red, mac, fecha, correo) VALUES (?, ?, ?, ?, ?)");
-    if ($stmt_insert) {
-        $stmt_insert->bind_param('sssss', $nombre, $red, $mac, $fecha, $correo);
-        $stmt_insert->execute();
-        $stmt_insert->close();
+    // Actualizar fecha de última conexión sin duplicar registro
+    $stmt_update = $conn->prepare("UPDATE `$table_name` SET fecha = ? WHERE mac = ?");
+    if ($stmt_update) {
+        $stmt_update->bind_param('ss', $fecha, $mac);
+        $stmt_update->execute();
+        $stmt_update->close();
     }
 
     $conn->close();

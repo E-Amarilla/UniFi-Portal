@@ -55,7 +55,7 @@ $unifi_connection->login();
 
 // $unifi_connection->unauthorize_guest($mac); // Removed to avoid disconnect/reconnect
 
-$unifi_connection->authorize_guest($mac, $duration, null, null, null, $ap);
+$auth_result = $unifi_connection->authorize_guest($mac, $duration, null, null, null, $ap);
 
 $nombre = $name;
 $red = 'WiFi Invitados';
@@ -63,7 +63,8 @@ $mac_address = $mac;
 $fecha = date('Y-m-d H:i:s');
 $correo = $email;
 
-$stmt = $conn->prepare("INSERT INTO `$table_name` (nombre, red, mac, fecha, correo) VALUES (?, ?, ?, ?, ?)");
+// Usar INSERT IGNORE para evitar duplicados si el MAC ya existe
+$stmt = $conn->prepare("INSERT IGNORE INTO `$table_name` (nombre, red, mac, fecha, correo) VALUES (?, ?, ?, ?, ?)");
 if ($stmt) {
     $stmt->bind_param('sssss', $nombre, $red, $mac_address, $fecha, $correo);
     $stmt->execute();
@@ -79,6 +80,9 @@ $conn->close();
     <meta charset="utf-8">
     <title>Acceso WiFi | Cremona Inoxidable</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <style>
         * {
             box-sizing: border-box;
@@ -124,6 +128,18 @@ $conn->close();
         }
 
     </style>
+    <script>
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+        if (isIOS()) {
+            setTimeout(function() {
+                // Intentar redirigir a localhost para cerrar el captive portal en iOS
+                window.location.href = 'http://localhost/';
+            }, 2000);
+        }
+    </script>
 </head>
 <body>
     <div class="card">
