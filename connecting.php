@@ -135,7 +135,7 @@ $conn->close();
 
         <p class="back-text">¡Su conexión fue establecida!</p>
         <p class="back2-text">Ya puede navegar por la web. <br>Si no es redirigido automaticamente, puede retirarse de esta página sin problemas.</p>
-        <p style="font-size:11px; color:#888; margin-top:8px;">Si se encuentra en un dispositivo iOS aguarde de 5 a 10 segundos, y verá como la conexión se establece.<br>(La X gris se volverá un tilde celeste).</p>
+        <p style="font-size:11px; color:#888; margin-top:8px;">Si se encuentra en un dispositivo iOS aguarde de 5 a 30 segundos, y verá como la conexión se establece.<br>(La X gris de la parte superior derecha se volverá un tilde celeste).</p>
     </div>
 </body>
 </html>
