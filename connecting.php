@@ -128,24 +128,6 @@ $conn->close();
         }
 
     </style>
-    <script>
-    // Si se desea cerrar automáticamente la pantalla en iOS cuando la conexión esté lista,
-    // se puede usar el siguiente evento. No se usa timeout, sino que se detecta la conexión.
-    function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    }
-    if (isIOS()) {
-        // Esperar a que el dispositivo tenga conexión a Internet
-        function checkConnectionAndClose() {
-            if (navigator.onLine) {
-                window.location.href = 'http://localhost/';
-            } else {
-                setTimeout(checkConnectionAndClose, 1000);
-            }
-        }
-        checkConnectionAndClose();
-    }
-    </script>
 </head>
 <body>
     <div class="card">
