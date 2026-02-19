@@ -128,25 +128,6 @@ $conn->close();
         }
 
     </style>
-    <script>
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent);
-        }
-
-        if (isIOS()) {
-            function checkConnectionAndRedirect() {
-                fetch('http://neverssl.com/', { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
-                    .then(() => {
-                        window.location.href = 'http://neverssl.com/';
-                    })
-                    .catch(() => {
-                        // Si falla, reintentar en 500ms
-                        setTimeout(checkConnectionAndRedirect, 500);
-                    });
-            }
-            checkConnectionAndRedirect();
-        }
-    </script>
 </head>
 <body>
     <div class="card">
@@ -154,7 +135,7 @@ $conn->close();
 
         <p class="back-text">¡Su conexión fue establecida!</p>
         <p class="back2-text">Ya puede navegar por la web. <br>Si no es redirigido automaticamente, puede retirarse de esta página sin problemas.</p>
-        <p style="font-size:11px; color:#888; margin-top:8px;">Si se encuentra en un dispositivo iOS aguarde de 5 a 10 segundos, esta pantalla se cerrará sola cuando la conexión se establezca.</p>
+        <p style="font-size:11px; color:#888; margin-top:8px;">Si se encuentra en un dispositivo iOS aguarde de 5 a 10 segundos, y verá como la conexión se establece.<br>(La X gris se volverá un tilde celeste).</p>
     </div>
 </body>
 </html>
