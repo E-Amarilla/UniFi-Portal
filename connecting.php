@@ -137,8 +137,6 @@ $conn->close();
             // Función para verificar conexión a Internet
             function checkInternetConnection() {
                 const urls = [
-                    'https://www.apple.com/library/test/success.html',
-                    'https://captive.apple.com/hotspot-detect.html',
                     'https://apple.com',
                     'https://www.google.com'
                 ];
