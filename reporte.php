@@ -1,4 +1,147 @@
 <?php
+// SIMPLE LOGIN PARA REPORTE - UNA SOLA CUENTA
+session_start();
+
+// Credenciales de la única cuenta de admin
+$admin_user = 'admin';
+$admin_pass = 'Rfc@32415';
+
+// Verificar si el usuario está intentando hacer logout
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: reporte.php');
+    exit;
+}
+
+// Verificar si el usuario está intentando hacer login
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username']) && isset($_POST['password'])) {
+    if ($_POST['username'] === $admin_user && $_POST['password'] === $admin_pass) {
+        $_SESSION['admin_logged'] = true;
+        $_SESSION['login_time'] = time();
+    } else {
+        $login_error = 'Usuario o contraseña incorrectos';
+    }
+}
+
+// Si no está logueado, mostrar formulario de login
+if (!isset($_SESSION['admin_logged']) || $_SESSION['admin_logged'] !== true) {
+    ?>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <title>Login | Reporte de Conexiones</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            body {
+                background: #f0f2f5;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+            .login-container {
+                background: #fff;
+                padding: 40px 30px;
+                border-radius: 15px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                width: 100%;
+                max-width: 350px;
+                text-align: center;
+            }
+            .login-container h1 {
+                margin-bottom: 10px;
+                color: #223f7f;
+                font-size: 24px;
+            }
+            .login-container p {
+                margin-bottom: 30px;
+                color: #666;
+                font-size: 14px;
+            }
+            .form-group {
+                margin-bottom: 15px;
+                text-align: left;
+            }
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 600;
+                color: #555;
+            }
+            .form-group input {
+                width: 100%;
+                padding: 12px 15px;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+                font-size: 14px;
+                transition: border 0.3s;
+            }
+            .form-group input:focus {
+                border-color: #223f7f;
+                box-shadow: 0 0 5px rgba(34, 63, 127, 0.3);
+                outline: none;
+            }
+            .login-btn {
+                width: 100%;
+                padding: 12px;
+                border: none;
+                border-radius: 10px;
+                background-color: #ed292e;
+                color: #fff;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .login-btn:hover {
+                background-color: #a31b1e;
+            }
+            .error {
+                background-color: #ffe0e0;
+                color: #a31b1e;
+                padding: 10px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="login-container">
+            <h1>Reporte WiFi</h1>
+            <p>Ingrese sus credenciales para acceder</p>
+            
+            <?php if (isset($login_error)): ?>
+                <div class="error"><?= htmlspecialchars($login_error) ?></div>
+            <?php endif; ?>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="login-btn">Ingresar</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    <?php
+    exit;
+}
+
+// Si llegó aquí, está logueado - MOSTRAR EL REPORTE
+
 $db_host = 'localhost';
 $db_user = 'unifi';
 $db_pass = 'unifi123';
@@ -79,8 +222,30 @@ if ($export_excel) {
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             padding: 30px;
+            width: 100%;
         }
-        h1 { text-align: center; color: #223f7f; margin-bottom: 30px; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        h1 { text-align: center; color: #223f7f; flex: 1; }
+        .logout-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            background: #ed292e;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .logout-btn:hover {
+            background: #a31b1e;
+        }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         th, td { padding: 12px 10px; border-bottom: 1px solid #eee; text-align: left; }
         th { background: #ed292e; color: #fff; }
@@ -93,7 +258,10 @@ if ($export_excel) {
 </head>
 <body>
     <div class="container">
-        <h1>Red invitados | Reporte de conexiones</h1>
+        <div class="header">
+            <h1>Red invitados | Reporte de conexiones</h1>
+            <a href="reporte.php?logout=true" class="logout-btn">Cerrar Sesión</a>
+        </div>
         <form class="filter-form" method="get">
             <label>Desde: <input type="date" name="fecha_inicio" value="<?= htmlspecialchars($fecha_inicio) ?>"></label>
             <label>Hasta: <input type="date" name="fecha_fin" value="<?= htmlspecialchars($fecha_fin) ?>"></label>
