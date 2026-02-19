@@ -53,7 +53,7 @@ $unifi_connection = new UniFi_API\Client($controlleruser, $controllerpassword, $
 $unifi_connection->set_debug($debug);
 $unifi_connection->login();
 
-// $unifi_connection->unauthorize_guest($mac); // Removed to avoid disconnect/reconnect
+// $unifi_connection->unauthorize_guest($mac);
 
 $auth_result = $unifi_connection->authorize_guest($mac, $duration, null, null, null, $ap);
 
@@ -129,49 +129,15 @@ $conn->close();
 
     </style>
     <script>
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
+    function isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+    }
 
-        if (isIOS()) {
-            // Función para verificar conexión a Internet
-            function checkInternetConnection() {
-                const urls = [
-                    'https://apple.com',
-                    'https://www.google.com'
-                ];
-
-                let connectionVerified = false;
-
-                function tryUrl(index) {
-                    if (index >= urls.length) {
-                        // Si ninguna URL funcionó, reintentar en 1 segundo
-                        if (!connectionVerified) {
-                            setTimeout(checkInternetConnection, 1000);
-                        }
-                        return;
-                    }
-
-                    fetch(urls[index], { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
-                        .then(() => {
-                            if (!connectionVerified) {
-                                connectionVerified = true;
-                                // Conexión confirmada, cerrar el portal cautivo
-                                window.location.href = 'http://localhost/';
-                            }
-                        })
-                        .catch(() => {
-                            // Esta URL falló, intentar la siguiente
-                            tryUrl(index + 1);
-                        });
-                }
-
-                tryUrl(0);
-            }
-
-            // Iniciar verificación de conexión
-            checkInternetConnection();
-        }
+    if (isIOS()) {
+        setTimeout(function() {
+            window.location.href = "http://neverssl.com/";
+        }, 1500);
+    }
     </script>
 </head>
 <body>
