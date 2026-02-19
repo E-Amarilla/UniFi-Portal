@@ -129,15 +129,23 @@ $conn->close();
 
     </style>
     <script>
-    function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent);
-    }
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent);
+        }
 
-    if (isIOS()) {
-        setTimeout(function() {
-            window.location.href = "http://neverssl.com/";
-        }, 1500);
-    }
+        if (isIOS()) {
+            function checkConnectionAndRedirect() {
+                fetch('http://neverssl.com/', { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
+                    .then(() => {
+                        window.location.href = 'http://neverssl.com/';
+                    })
+                    .catch(() => {
+                        // Si falla, reintentar en 500ms
+                        setTimeout(checkConnectionAndRedirect, 500);
+                    });
+            }
+            checkConnectionAndRedirect();
+        }
     </script>
 </head>
 <body>

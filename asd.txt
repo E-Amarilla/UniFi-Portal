@@ -1,0 +1,33 @@
+1:
+function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+}
+
+if (isIOS()) {
+    function checkInternetConnection() {
+        const urls = ['https://www.apple.com/library/test/success.html', 'https://captive.apple.com/hotspot-detect.html'];
+        let connectionVerified = false;
+
+        function tryUrl(index) {
+            if (index >= urls.length) {
+                if (!connectionVerified) {
+                    setTimeout(checkInternetConnection, 1000);
+                }
+                return;
+            }
+
+            fetch(urls[index], { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
+                .then(() => {
+                    if (!connectionVerified) {
+                        connectionVerified = true;
+                        window.location.href = 'http://neverssl.com/';
+                    }
+                })
+                .catch(() => {
+                    tryUrl(index + 1);
+                });
+        }
+        tryUrl(0);
+    }
+    checkInternetConnection();
+}
