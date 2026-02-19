@@ -129,16 +129,22 @@ $conn->close();
 
     </style>
     <script>
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        if (isIOS()) {
-            setTimeout(function() {
-                // Intentar redirigir a localhost para cerrar el captive portal en iOS
+    // Si se desea cerrar automáticamente la pantalla en iOS cuando la conexión esté lista,
+    // se puede usar el siguiente evento. No se usa timeout, sino que se detecta la conexión.
+    function isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    }
+    if (isIOS()) {
+        // Esperar a que el dispositivo tenga conexión a Internet
+        function checkConnectionAndClose() {
+            if (navigator.onLine) {
                 window.location.href = 'http://localhost/';
-            }, 2000);
+            } else {
+                setTimeout(checkConnectionAndClose, 1000);
+            }
         }
+        checkConnectionAndClose();
+    }
     </script>
 </head>
 <body>
@@ -147,6 +153,7 @@ $conn->close();
 
         <p class="back-text">¡Su conexión fue establecida!</p>
         <p class="back2-text">Ya puede navegar por la web. <br>Si no es redirigido automaticamente, puede retirarse de esta página sin problemas.</p>
+        <p style="font-size:11px; color:#888; margin-top:8px;">Si se encuentra en un dispositivo iOS aguarde de 5 a 10 segundos, esta pantalla se cerrará sola cuando la conexión se establezca.</p>
     </div>
 </body>
 </html>
