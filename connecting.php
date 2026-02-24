@@ -45,7 +45,7 @@ $site_id = 'default';
 
 $controlleruser     = 'admin';
 $controllerpassword = 'miloj@324156';
-$controllerurl      = 'https://192.168.20.16:8443';
+$controllerurl      = 'https://192.168.20.241:8443';
 $controllerversion  = '10.0.162'; //Version del UniFi sv
 $debug = false;
 
